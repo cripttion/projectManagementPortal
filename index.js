@@ -21,7 +21,7 @@ const ProjectRoute = require('./routes/ProjectRoutes');
 const {authenticateUser,authorizeTeacher } = require('./middlewareAuthorization');
 const ProjectMember = require("./models/ProjectMember")(sequelize);
 const app = express();
-const port =3000;
+const port =process.env.PORT||3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
