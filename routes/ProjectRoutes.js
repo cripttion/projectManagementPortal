@@ -177,7 +177,7 @@ router.get("/pdSpecific", async (req, res) => {
   const userID = req.query.userID;
   let role = req.query.role;
   const xData = req.query.xData;
- if(xData)
+ if(role==='Admin'&&xData)
  {
   role='Teacher';
  }
