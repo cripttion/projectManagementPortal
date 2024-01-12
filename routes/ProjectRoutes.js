@@ -175,8 +175,13 @@ router.post("/addStudnets/:projectID", async (req, res) => {
 
 router.get("/pdSpecific", async (req, res) => {
   const userID = req.query.userID;
-  const role = req.query.role;
-
+  let role = req.query.role;
+  const xData = req.query.xData;
+ if(xData)
+ {
+  role='Teacher';
+ }
+console.log(role);
   try {
     let value;
 
@@ -228,6 +233,11 @@ router.get("/pdSpecific", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+
+
+
 router.post("/changeprojectStatus/:projectID", async (req, res) => {
   const projectId = req.params.projectID;
   // const { title, abstract } = req.body;
