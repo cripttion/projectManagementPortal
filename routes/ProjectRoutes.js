@@ -80,8 +80,14 @@ const getLastProjectId = async (year, semester) => {
 
 router.get("/allProjects", async (req, res) => {
   try {
-    const students = await Project.findAll();
-    res.json(students);
+    const students = await sequelize.query(
+      'SELECT * FROM  Projects AS p JOIN Teachers AS t1 ON p.GuideID = t1.TeacherID;'
+    );
+    const reveiwer = await sequelize.query(
+      'SELECT * FROM  Projects AS p JOIN Teachers AS t1 ON p.ReviewerID = t1.TeacherID;'
+    );
+      res.json({'guide':students[0],'reveiwer':reveiwer[0]});
+      
   } catch (error) {
     console.error("Error fetching students:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -174,7 +180,21 @@ router.get("/pdSpecific", async (req, res) => {
   try {
     let value;
 
-    if (role === 'Student') {
+    if (role === 'Admin') {
+      const projectId = await ProjectMember.findAll({
+        attributes: ['ProjectID'],
+        where: {
+          StudentID: userID, // Assuming StudentID is the correct field for comparison
+        },
+      });
+
+      if (projectId.length > 0) {
+        value = projectId[0].ProjectID;
+      } else {
+        return res.status(404).json({ message: "No projects found for the given student" });
+      }
+    } 
+    else if (role === 'Student') {
       const projectId = await ProjectMember.findAll({
         attributes: ['ProjectID'],
         where: {
@@ -328,5 +348,6 @@ res.status(500).json({ error: "Internal Server Error" });console.log('error');
 }
 })
 
+router.get('/alldata')
 
 module.exports = router;
